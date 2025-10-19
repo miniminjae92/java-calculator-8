@@ -21,6 +21,9 @@ public class Delimiter {
     }
 
     public List<String> seperateString(String string) {
+        if (string == null) {
+            throw new IllegalArgumentException("string is null");
+        }
         String checked = checkCustomDelimiter(string);
         String regex = delimiters.stream().map(Pattern::quote).collect(Collectors.joining("|"));
         return List.of(checked.split(regex));
@@ -29,8 +32,13 @@ public class Delimiter {
     private String checkCustomDelimiter(String string) {
         Matcher matcher = CUSTOM_DELIMITER.matcher(string);
         if (matcher.find()) {
-            delimiters.add(matcher.group(1));
-            return matcher.group(2);
+            String customDelimiter = matcher.group(1);
+            String payLoad = matcher.group(2);
+            if (customDelimiter.isEmpty()) {
+                return payLoad;
+            }
+            delimiters.add(customDelimiter);
+            return payLoad;
         }
         return string;
     }
