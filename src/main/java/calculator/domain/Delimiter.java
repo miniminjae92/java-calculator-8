@@ -6,6 +6,7 @@ import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class Delimiter {
 
@@ -24,9 +25,11 @@ public class Delimiter {
         if (string == null) {
             throw new IllegalArgumentException("string is null");
         }
-        String checked = checkCustomDelimiter(string);
+        String payLoad = checkCustomDelimiter(string);
         String regex = delimiters.stream().map(Pattern::quote).collect(Collectors.joining("|"));
-        return List.of(checked.split(regex));
+        return Stream.of(payLoad.split(regex))
+                .filter(s -> !s.isEmpty())
+                .collect(Collectors.toList());
     }
 
     private String checkCustomDelimiter(String string) {
